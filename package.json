@@ -1,0 +1,52 @@
+{
+  "name": "@pown/whois",
+  "version": "2.0.0",
+  "description": "Pownage guaranteed",
+  "main": "lib/index.js",
+  "scripts": {
+    "whois": "POWN_ROOT=. pown-cli whois",
+    "recon": "POWN_ROOT=. pown-cli recon",
+    "usage": "POWN_ROOT=. pown-cli whois --help",
+    "build": "true",
+    "test": "true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pownjs/pown-whois.git"
+  },
+  "keywords": [
+    "exploit",
+    "framework"
+  ],
+  "author": "pdp <pdp@gnucitizen.org>",
+  "contributors": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pownjs/pown-whois/issues"
+  },
+  "homepage": "https://github.com/pownjs/pown-whois#readme",
+  "devDependencies": {
+    "@pown/cli": "^2.31.2",
+    "@pown/recon": "^2.151.0",
+    "@pown/toolchain": "^2.1.0"
+  },
+  "dependencies": {
+    "ip-range-check": "^0.2.0",
+    "whois-json": "^2.0.4"
+  },
+  "pown": {
+    "transforms": [
+      "transforms/whois"
+    ]
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "extends": "./.babelrc"
+        }
+      ]
+    ]
+  }
+}
