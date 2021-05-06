@@ -71,27 +71,27 @@ const whoisReport = class extends Transform {
         return 5
     }
 
-    async handle({ id: source = '', label = '' }, options) {
+    async handle({ id: source = '', label: search = '' }, options) {
         const { fastLookup, extractAsn, ...whoisOptions } = options || {}
 
         const results = []
 
         let report
 
-        if (fastLookup && isIpv4(label)) {
+        if (fastLookup && isIpv4(search)) {
             for (let [cidr, cachedReport] of Object.entries(cache)) {
-                if (cidr.split(/[\s,]+/).map(c => c.trim()).filter(c => c).some((c => ipRangeCheck(label, c)))) {
+                if (cidr.split(/[\s,]+/).map(c => c.trim()).filter(c => c).some((c => ipRangeCheck(search, c)))) {
                     report = cachedReport
                 }
             }
         }
 
         if (!report) {
-            report = await whois(label, whoisOptions)
+            report = await whois(search, whoisOptions)
         }
 
         if (report) {
-            const { organization, orgName = organization, netHandle = orgName, netName: label = netHandle } = report
+            const { organization, orgName = organization, netHandle = orgName, netName: label = netHandle || search } = report
 
             const id = makeId(WHOIS_REPORT_TYPE, label)
 
@@ -101,7 +101,7 @@ const whoisReport = class extends Transform {
                 const { origin, originAs, asn = origin || originAs, organization } = report
 
                 if (asn) {
-                    results.push({ type: 'asn', lavbel: asn, props: { asn, organization }, edges: [source, id] })
+                    results.push({ type: 'asn', label: asn, props: { asn, organization }, edges: [source, id] })
                 }
             }
 
