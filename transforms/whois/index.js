@@ -90,22 +90,26 @@ const whoisReport = class extends Transform {
             report = await whois(label, whoisOptions)
         }
 
-        const id = makeId(WHOIS_REPORT_TYPE, label)
+        if (report) {
+            const { organization, orgName = organization, netHandle = orgName, netName: label = netHandle } = report
 
-        results.push({ id, type: WHOIS_REPORT_TYPE, label, props: { ...report }, edges: [source] })
+            const id = makeId(WHOIS_REPORT_TYPE, label)
 
-        if (extractAsn) {
-            const { origin, originAs, asn = origin || originAs, organization } = report
+            results.push({ id, type: WHOIS_REPORT_TYPE, label, props: { ...report }, edges: [source] })
 
-            if (asn) {
-                results.push({ type: 'asn', lavbel: asn, props: { asn, organization }, edges: [source, id] })
+            if (extractAsn) {
+                const { origin, originAs, asn = origin || originAs, organization } = report
+
+                if (asn) {
+                    results.push({ type: 'asn', lavbel: asn, props: { asn, organization }, edges: [source, id] })
+                }
             }
-        }
 
-        const { cidr } = report
+            const { cidr } = report
 
-        if (cidr) {
-            cache[cidr] = report
+            if (cidr) {
+                cache[cidr] = report
+            }
         }
 
         return results
